@@ -14,9 +14,15 @@ export function sendServerSendEvent(req, res) {
 
   const sseId = new Date().toLocaleTimeString();
 
-  setInterval(function () {
+  const intervalId = setInterval(function () {
     writeServerSendEvent(res, sseId, new Date().toLocaleTimeString());
   }, sendInterval);
 
   writeServerSendEvent(res, sseId, new Date().toLocaleTimeString());
+
+  res.on("close", () => {
+    console.log("Client closed connection");
+    clearInterval(intervalId);
+    res.end();
+  });
 }
