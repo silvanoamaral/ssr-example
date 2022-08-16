@@ -7,7 +7,7 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 
 import App from "../src/App";
-import { sendServerSendEvent } from "./serve-send-event";
+// import { sendServerSendEvent } from "./serve-send-event";
 
 var corsOptions = {
   // origin: 'http://example.com',
@@ -18,11 +18,49 @@ const PORT = process.env.PORT || 8000;
 
 const app = express();
 
+let globalVersion = false;
+
+const sendInterval = 5000;
+
+function writeServerSendEvent(res, sseId, data) {
+  res.write("data: " + JSON.stringify({ msg: data, id: sseId }) + "\n\n");
+}
+
+export function sendServerSendEvent(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+
+  const sseId = new Date().toLocaleTimeString();
+
+  console.log("passando aqui", globalVersion);
+
+  const intervalId = setInterval(function () {
+    if (globalVersion) {
+      writeServerSendEvent(res, sseId, new Date().toLocaleTimeString());
+
+      globalVersion = false;
+    }
+  }, sendInterval);
+
+  res.on("close", () => {
+    console.log("Client closed connection");
+    clearInterval(intervalId);
+    res.end();
+  });
+}
+
 app.get("/events", cors(corsOptions), function (req, res) {
   sendServerSendEvent(req, res);
 });
 
-app.get("/payment", function (req, res) {
+app.post("/payment", cors(corsOptions), function (req, res) {
+  globalVersion = true;
+
+  console.log("passou na payment", globalVersion);
+
   return res.send("ok");
 });
 

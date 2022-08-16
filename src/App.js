@@ -2,6 +2,27 @@ import React from "react";
 import "./App.css";
 
 function App() {
+  const handleOnClick = async () => {
+    // 1 criptografa
+    // 2 envia os dados para /payment
+
+    const url = "http://localhost:8000/payment";
+
+    const data = {
+      name: "Silvano",
+      state: "Sao Paulo",
+    };
+
+    const payload = new URLSearchParams(data);
+
+    const response = await fetch(url, {
+      method: "post",
+      body: payload,
+    });
+
+    console.log({ response });
+  };
+
   return (
     <div className="form-container">
       <div className="field-container">
@@ -35,6 +56,8 @@ function App() {
           inputMode="numeric"
         />
       </div>
+
+      <button onClick={handleOnClick}>subscribe</button>
     </div>
   );
 }
