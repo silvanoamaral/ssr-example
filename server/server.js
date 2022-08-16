@@ -1,6 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import cors from "cors";
 
 import React from "react";
 import ReactDOMServer from "react-dom/server";
@@ -8,11 +9,16 @@ import ReactDOMServer from "react-dom/server";
 import App from "../src/App";
 import { sendServerSendEvent } from "./serve-send-event";
 
+var corsOptions = {
+  // origin: 'http://example.com',
+  optionsSuccessStatus: 200,
+};
+
 const PORT = process.env.PORT || 8000;
 
 const app = express();
 
-app.get("/events", function (req, res) {
+app.get("/events", cors(corsOptions), function (req, res) {
   sendServerSendEvent(req, res);
 });
 
