@@ -6,10 +6,19 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 
 import App from "../src/App";
+import { sendServerSendEvent } from "./serve-send-event";
 
 const PORT = process.env.PORT || 8000;
 
 const app = express();
+
+app.get("/events", function (req, res) {
+  sendServerSendEvent(req, res);
+});
+
+app.get("/payment", function (req, res) {
+  return res.send("ok");
+});
 
 app.get("/", function (req, res) {
   return res.send("[OK] Carregou o server... ");
