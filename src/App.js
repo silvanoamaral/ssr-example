@@ -6,7 +6,7 @@ function App() {
     // 1 criptografa
     // 2 envia os dados para /payment
 
-    const url = "http://localhost:8000/payment";
+    const url = "https://projeto-ssr-example.herokuapp.com/payment";
 
     const data = {
       name: "Silvano",
