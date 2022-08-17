@@ -12,6 +12,10 @@ function App() {
   const [expirationDate, setExpirationDate] = React.useState("");
   const [cvv, setCvv] = React.useState("");
 
+  if (typeof window !== "undefined") {
+    console.log(window.location);
+  }
+
   const data = {
     resellerName,
     cardNumber,

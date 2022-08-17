@@ -20,12 +20,10 @@ const app = express();
 
 let globalVersion = false;
 
-const sendInterval = 5000;
+const sendInterval = 1000;
 
 function writeServerSendEvent(res, sseId, data, isDisabled) {
-  res.write(
-    "data: " + JSON.stringify({ msg: data, id: sseId, isDisabled }) + "\n\n"
-  );
+  res.write({ msg: data, id: sseId, isDisabled });
 }
 
 export function sendServerSendEvent(req, res) {
@@ -37,8 +35,6 @@ export function sendServerSendEvent(req, res) {
   });
 
   const sseId = new Date().toLocaleTimeString();
-
-  console.log("passando aqui", globalVersion);
 
   const intervalId = setInterval(function () {
     if (globalVersion) {
@@ -53,7 +49,11 @@ export function sendServerSendEvent(req, res) {
   res.on("close", () => {
     console.log("Client closed connection");
     clearInterval(intervalId);
-    res.end();
+    res.end({
+      error: true,
+      message: "Client closed connection",
+      isDisabled: true,
+    });
   });
 }
 
@@ -63,8 +63,6 @@ app.get("/events", cors(corsOptions), function (req, res) {
 
 app.post("/payment", cors(corsOptions), function (req, res) {
   globalVersion = true;
-
-  console.log("passou na payment", globalVersion);
 
   return res.send("ok");
 });
