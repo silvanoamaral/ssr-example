@@ -4,7 +4,7 @@ function writeServerSendEvent(res, sseId, data) {
   res.write("data: " + JSON.stringify({ msg: data, id: sseId }) + "\n\n");
 }
 
-export function sendServerSendEvent(req, res) {
+export function sendServerSendEvent(req, res, globalVersion) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
@@ -22,10 +22,6 @@ export function sendServerSendEvent(req, res) {
       globalVersion = false;
     }
   }, sendInterval);
-
-  // if (globalVersion) {
-  //   writeServerSendEvent(res, sseId, new Date().toLocaleTimeString());
-  // }
 
   res.on("close", () => {
     console.log("Client closed connection");

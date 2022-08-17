@@ -1,50 +1,80 @@
 import React from "react";
 import "./App.css";
 
+const producao = "https://projeto-ssr-example.herokuapp.com/payment";
+// const local = "http://localhost:8000/payment";
+
+const enviroment = producao;
+
 function App() {
-  const handleOnClick = async () => {
-    // 1 criptografa
-    // 2 envia os dados para /payment
+  const [resellerName, setName] = React.useState("");
+  const [cardNumber, setCardNumber] = React.useState("");
+  const [expirationDate, setExpirationDate] = React.useState("");
+  const [cvv, setCvv] = React.useState("");
 
-    const url = "https://projeto-ssr-example.herokuapp.com/payment";
+  const data = {
+    resellerName,
+    cardNumber,
+    expirationDate,
+    cvv,
+  };
 
-    const data = {
-      name: "Silvano",
-      state: "Sao Paulo",
-    };
+  const handleOnBlurName = (e) => {
+    const name = e.target.value;
+    if (name !== undefined && name !== "") {
+      setName(name);
+    }
+  };
 
+  const handleOnBlurCardNumber = (e) => {
+    const cardNumberData = e.target.value;
+    if (cardNumberData !== undefined && cardNumberData !== "") {
+      setCardNumber(cardNumberData);
+    }
+  };
+  const handleOnBlurExpiration = (e) => {
+    const expiration = e.target.value;
+    if (expiration !== undefined && expiration !== "") {
+      setExpirationDate(expiration);
+    }
+  };
+
+  const handleOnBlurSecurityCode = (e) => {
+    const cvvData = e.target.value;
+    if (cvvData !== undefined && cvvData !== "") {
+      setCvv(cvvData);
+    }
+  };
+
+  const getPayment = async () => {
     const payload = new URLSearchParams(data);
 
-    const response = await fetch(url, {
+    return await fetch(enviroment, {
       method: "post",
       body: payload,
     });
-
-    console.log({ response });
   };
+
+  if (resellerName && cardNumber && cvv !== "") {
+    getPayment();
+  }
 
   return (
     <div className="form-container">
       <div className="field-container">
         <label htmlFor="name">Nome</label>
-        <input id="name" maxLength="20" type="text" />
+        <input id="name" maxLength="20" type="text" onBlur={handleOnBlurName} />
       </div>
       <div className="field-container">
         <label htmlFor="cardnumber">Número do cartão</label>
-        <input
-          id="cardnumber"
-          type="text"
-          pattern="[0-9]*"
-          inputMode="numeric"
-        />
+        <input id="cardnumber" type="text" onBlur={handleOnBlurCardNumber} />
       </div>
       <div className="field-container">
-        <label htmlFor="expirationdate">Expiração (mm/yy)</label>
+        <label htmlFor="expirationDate">Data de expiração (mm/yy)</label>
         <input
-          id="expirationdate"
+          id="expirationDate"
           type="text"
-          pattern="[0-9]*"
-          inputMode="numeric"
+          onBlur={handleOnBlurExpiration}
         />
       </div>
       <div className="field-container">
@@ -52,12 +82,9 @@ function App() {
         <input
           id="securitycode"
           type="text"
-          pattern="[0-9]*"
-          inputMode="numeric"
+          onBlur={handleOnBlurSecurityCode}
         />
       </div>
-
-      <button onClick={handleOnClick}>subscribe</button>
     </div>
   );
 }
