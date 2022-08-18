@@ -7,11 +7,23 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 
 import App from "../src/App";
-// import { sendServerSendEvent } from "./serve-send-event";
+
+var allowedOrigins = [
+  "http://localhost:3000/",
+  "https://star-payment-front.herokuapp.com",
+];
 
 var corsOptions = {
-  // origin: "https://star-payment-front.herokuapp.com",
-  // "Access-Control-Allow-Origin": "*",
+  // origin: function (origin, callback) {
+  //   if (!origin) return callback(null, true);
+  //   if (allowedOrigins.indexOf(origin) === -1) {
+  //     var msg =
+  //       "The CORS policy for this site does not " +
+  //       "allow access from the specified Origin.";
+  //     return callback(new Error(msg), false);
+  //   }
+  //   return callback(null, true);
+  // },
   optionsSuccessStatus: 200,
 };
 
@@ -24,7 +36,9 @@ let globalVersion = false;
 const sendInterval = 1000;
 
 function writeServerSendEvent(res, sseId, data, isDisabled) {
-  res.write({ msg: data, id: sseId, isDisabled });
+  res.write(
+    "data: " + JSON.stringify({ msg: data, id: sseId, isDisabled }) + "\n\n"
+  );
 }
 
 export function sendServerSendEvent(req, res) {
@@ -49,11 +63,8 @@ export function sendServerSendEvent(req, res) {
   res.on("close", () => {
     console.log("Client closed connection");
     clearInterval(intervalId);
-    res.end({
-      error: true,
-      message: "Client closed connection",
-      isDisabled: true,
-    });
+
+    writeServerSendEvent(res, sseId, new Date().toLocaleTimeString(), true);
   });
 }
 
