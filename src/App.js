@@ -1,4 +1,5 @@
 import React from "react";
+import { encryptFn } from "./lib/encrypt";
 import "./App.css";
 
 const producao = "https://projeto-ssr-example.herokuapp.com/payment";
@@ -12,9 +13,9 @@ function App() {
   const [expirationDate, setExpirationDate] = React.useState("");
   const [cvv, setCvv] = React.useState("");
 
-  if (typeof window !== "undefined") {
-    console.log(window.location);
-  }
+  // if (typeof window !== "undefined") {
+  //   console.log(window.location);
+  // }
 
   const data = {
     resellerName,
@@ -51,7 +52,8 @@ function App() {
   };
 
   const getPayment = async () => {
-    const payload = new URLSearchParams(data);
+    const encrypted = encryptFn(JSON.stringify(data));
+    const payload = new URLSearchParams({ encrypted_credit_card: encrypted });
 
     return await fetch(enviroment, {
       method: "post",
