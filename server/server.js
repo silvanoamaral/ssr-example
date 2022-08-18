@@ -11,6 +11,7 @@ import App from "../src/App";
 
 var corsOptions = {
   origin: "https://star-payment-front.herokuapp.com",
+  "Access-Control-Allow-Origin": "*",
   optionsSuccessStatus: 200,
 };
 
