@@ -10,7 +10,7 @@ import App from "../src/App";
 // import { sendServerSendEvent } from "./serve-send-event";
 
 var corsOptions = {
-  origin: "*",
+  origin: "https://star-payment-front.herokuapp.com",
   optionsSuccessStatus: 200,
 };
 
