@@ -58,7 +58,7 @@ export function sendServerSendEvent(req, res) {
   });
 }
 
-app.get("/events", cors(corsOptions), function (req, res) {
+app.get("/events", function (req, res) {
   sendServerSendEvent(req, res);
 });
 
