@@ -10,7 +10,7 @@ import App from "../src/App";
 // import { sendServerSendEvent } from "./serve-send-event";
 
 var corsOptions = {
-  // origin: 'http://example.com',
+  origin: "*",
   optionsSuccessStatus: 200,
 };
 
