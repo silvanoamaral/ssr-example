@@ -10,8 +10,8 @@ import App from "../src/App";
 // import { sendServerSendEvent } from "./serve-send-event";
 
 var corsOptions = {
-  origin: "https://star-payment-front.herokuapp.com",
-  "Access-Control-Allow-Origin": "*",
+  // origin: "https://star-payment-front.herokuapp.com",
+  // "Access-Control-Allow-Origin": "*",
   optionsSuccessStatus: 200,
 };
 
@@ -32,7 +32,6 @@ export function sendServerSendEvent(req, res) {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
     Connection: "keep-alive",
-    "Access-Control-Allow-Origin": "*",
   });
 
   const sseId = new Date().toLocaleTimeString();
@@ -58,7 +57,7 @@ export function sendServerSendEvent(req, res) {
   });
 }
 
-app.get("/events", function (req, res) {
+app.get("/events", cors(corsOptions), function (req, res) {
   sendServerSendEvent(req, res);
 });
 
